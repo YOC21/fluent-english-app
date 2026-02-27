@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="FluentEnglish Pro">
+    <meta name="description" content="Master English fluency in 21 days with Christopher Hill's proven method">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Icons -->
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512x512.png">
+    
+    <title>FluentEnglish Pro - Master English</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --safe-area-top: env(safe-area-inset-top, 0px);
+            --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100%;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overscroll-behavior-y: none;
+        }
+
+        /* Safe area for notched phones */
+        .safe-area {
+            padding-top: var(--safe-area-top);
+            padding-bottom: var(--safe-area-bottom);
+        }
+
+        /* Install Banner */
+        .install-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding-bottom: calc(1rem + var(--safe-area-bottom));
+        }
+
+        .install-banner.show {
+            display: flex;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .install-banner .app-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex: 1;
+        }
+
+        .install-banner .app-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .install-banner .app-text h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .install-banner .app-text p {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .install-banner .btn-install {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .install-banner .btn-close {
+            background: none;
+            border: none;
+            color: #64748b;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: var(--gradient);
+            padding: 0.75rem 1rem;
+            padding-top: calc(0.75rem + var(--safe-area-top));
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        /* Mobile Navigation */
+        .mobile-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: none;
+            justify-content: space-around;
+            padding: 0.5rem 0;
+            padding-bottom: calc(0.5rem + var(--safe-area-bottom));
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.7rem;
+            padding: 0.5rem 1rem;
+            transition: color 0.3s;
+        }
+
+        .mobile-nav-item i {
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .mobile-nav-item.active, .mobile-nav-item:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5rem 1.5rem 6rem;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-content h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.8s ease;
+            line-height: 1.3;
+        }
+
+        .hero-content p {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+            animation: fadeInUp 0.8s ease 0.2s both;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            max-width: 280px;
+            margin: 0 auto;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Features Grid */
+        .features {
+            padding: 3rem 1rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title h2 {
+            font-size: 1.5rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .feature-card:active {
+            transform: scale(0.98);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card p {
+            color: #64748b;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* Golden Rules Section */
+        .golden-rules {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 3rem 1rem;
+        }
+
+        .rules-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .rule-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 1.25rem;
+            border-radius: 16px;
+            margin: 0.75rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .rule-number {
+            width: 36px;
+            height: 36px;
+            background: white;
+            color: var(--secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .rule-content h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .rule-content p {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            opacity: 0.95;
+        }
+
+        /* 21-Day Challenge Section */
+        .challenge-section {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 1rem;
+            padding-bottom: calc(3rem + var(--safe-area-bottom));
+        }
+
+        .challenge-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .challenge-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .challenge-section > p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .schedule-card {
+            background: rgba(255,255,255,0.1);
+            padding: 1.25rem;
+            border-radius: 16px;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .schedule-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .schedule-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+        }
+
+        .schedule-item i {
+            font-size: 1.25rem;
+            color: var(--secondary);
+        }
+
+        .schedule-item .time {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .schedule-item p {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            margin-top: 0.25rem;
+        }
+
+        .requirements-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            text-align: left;
+            margin: 1.5rem 0;
+        }
+
+        .requirement-item {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .requirement-item i {
+            font-size: 1.5rem;
+        }
+
+        .requirement-item p {
+            font-size: 0.85rem;
+        }
+
+        /* Progress Tracker */
+        .progress-section {
+            padding: 3rem 1rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding-bottom: calc(3rem + var(--safe-area-bottom));
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.25rem;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        .streak-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-top: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .streak-icon {
+            font-size: 2.5rem;
+            color: var(--secondary);
+        }
+
+        .streak-content h3 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .streak-content .streak-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .streak-content p {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 2000;
+            align-items: flex-end;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 24px 24px 0 0;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUpModal 0.3s ease;
+            position: relative;
+        }
+
+        @keyframes slideUpModal {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #f1f5f9;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .modal-content h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            padding-right: 2.5rem;
+        }
+
+        /* Shadowing Interface */
+        .shadowing-player {
+            background: var(--dark);
+            color: white;
+            padding: 1.25rem;
+            border-radius: 16px;
+            margin: 1rem 0;
+        }
+
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .control-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 6px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .recorder-container {
+            background: #f1f5f9;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .record-btn {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: var(--danger);
+            border: none;
+            color: white;
+            font-size: 1.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 1rem 0;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .record-btn:active {
+            transform: scale(0.95);
+        }
+
+        .record-btn.recording {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5); }
+        }
+
+        .recording-indicator {
+            display: none;
+            color: var(--danger);
+            font-weight: 600;
+            font-size: 0.9rem;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .recording-indicator.active {
+            display: flex;
+        }
+
+        /* Flashcards */
+        .flashcard-container {
+            perspective: 1000px;
+            width: 100%;
+            max-width: 100%;
+            margin: 1.5rem 0;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 220px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        .flashcard-front {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .flashcard-back {
+            background: white;
+            color: var(--dark);
+            transform: rotateY(180deg);
+            border: 2px solid #e2e8f0;
+        }
+
+        .flashcard h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+
+        .flashcard p {
+            font-size: 0.9rem;
+            text-align: center;
+            opacity: 0.9;
+        }
+
+        .idiom-nav {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .btn-small {
+            padding: 0.6rem 1.25rem;
+            font-size: 0.85rem;
+        }
+
+        /* Checklist */
+        .checklist-container {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
+
+        .checklist-container h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            font-size: 0.85rem;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+        }
+
+        /* Timer Display */
+        .timer-display {
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            color: var(--primary);
+            font-family: 'Courier New', monospace;
+            margin: 1rem 0;
+            letter-spacing: 2px;
+        }
+
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        /* Word List */
+        .word-input-row {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .word-input-row input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .word-list {
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .word-item {
+            background: #f1f5f9;
+            padding: 0.875rem;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .word-item .word-text {
+            flex: 1;
+        }
+
+        .word-item .word-text strong {
+            display: block;
+            font-size: 0.95rem;
+        }
+
+        .word-item .word-text span {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .word-item .word-date {
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
+
+        .word-item button {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* Daily Word Card */
+        .daily-word-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin: 1rem 0;
+        }
+
+        .daily-word-card h4 {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+
+        .daily-word-card .word {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .daily-word-card .meaning {
+            font-size: 0.95rem;
+            opacity: 0.95;
+        }
+
+        .daily-word-card .example {
+            margin-top: 0.75rem;
+            font-style: italic;
+            font-size: 0.85rem;
+            opacity: 0.9;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive breakpoints */
+        @media (min-width: 640px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .requirements-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .modal-content {
+                border-radius: 24px;
+                max-width: 600px;
+                max-height: 85vh;
+                margin: 2rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .features-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .cta-buttons {
+                flex-direction: row;
+            }
+
+            .btn {
+                width: auto;
+            }
+        }
+
+        @media (max-width: 639px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-nav {
+                display: flex;
+            }
+
+            .hero {
+                padding-bottom: 7rem;
+            }
+
+            .features, .progress-section, .challenge-section {
+                padding-bottom: 6rem;
+            }
+        }
+
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--dark);
+            color: white;
+            padding: 0.875rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            z-index: 4000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Pull to refresh indicator */
+        .ptr-indicator {
+            position: fixed;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 500;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .ptr-indicator.visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Install Banner -->
+    <div class="install-banner" id="installBanner">
+        <div class="app-info">
+            <div class="app-icon">
+                <i class="fas fa-microphone-alt"></i>
+            </div>
+            <div class="app-text">
+                <h4>Install FluentEnglish Pro</h4>
+                <p>Add to home screen for offline access</p>
+            </div>
+        </div>
+        <button class="btn-install" id="installBtn">Install</button>
+        <button class="btn-close" onclick="dismissInstall()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-microphone-alt"></i>
+                FluentEnglish
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#21days">21-Day</a></li>
+                <li><a href="#progress">Progress</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav">
+        <a href="#home" class="mobile-nav-item active" onclick="setActiveNav(this)">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="#21days" class="mobile-nav-item" onclick="setActiveNav(this)">
+            <i class="fas fa-fire"></i>
+            <span>Challenge</span>
+        </a>
+        <a href="#features" class="mobile-nav-item" onclick="setActiveNav(this)">
+            <i class="fas fa-th-large"></i>
+            <span>Tools</span>
+        </a>
+        <a href="#progress" class="mobile-nav-item" onclick="setActiveNav(this)">
+            <i class="fas fa-chart-line"></i>
+            <span>Progress</span>
+        </a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Master English Fluency in 21 Days</h1>
+            <p>Based on Christopher Hill's proven method. Learn English 3-5x faster than traditional methods.</p>
+            <div class="cta-buttons">
+                <button class="btn btn-primary" onclick="start21DayChallenge()">
+                    <i class="fas fa-rocket"></i> Start 21-Day Challenge
+                </button>
+                <button class="btn btn-secondary" onclick="openFeature('shadowing')">
+                    <i class="fas fa-play"></i> Try Shadowing
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- The 3 Golden Rules -->
+    <section class="golden-rules" id="golden-rules">
+        <div class="rules-container">
+            <div class="section-title" style="color: white;">
+                <h2>The 3 Golden Rules</h2>
+                <p>Foundation for rapid fluency</p>
+            </div>
+            
+            <div class="rule-card">
+                <div class="rule-number">1</div>
+                <div class="rule-content">
+                    <h3>Think in English</h3>
+                    <p>Stop translating from your native language. Rewire your brain to think directly in English. Read signs in English, have conversations in your head in English.</p>
+                </div>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-number">2</div>
+                <div class="rule-content">
+                    <h3>Power of Immersion</h3>
+                    <p>Surround yourself with English completely. Watch English movies, listen to podcasts, read books, and speak English whenever possible.</p>
+                </div>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-number">3</div>
+                <div class="rule-content">
+                    <h3>Embrace Mistakes</h3>
+                    <p>Mistakes are learning opportunities. Every error teaches you how NOT to do something. Don't be afraid to speak!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-title">
+            <h2>Master English with Proven Techniques</h2>
+            <p>All methods from Christopher Hill's Black Book</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card" onclick="openFeature('shadowing')">
+                <div class="feature-icon">
+                    <i class="fas fa-volume-up"></i>
+                </div>
+                <h3>Shadowing</h3>
+                <p>Listen and repeat simultaneously. The #1 technique for rapid fluency and accent reduction.</p>
+            </div>
+
+            <div class="feature-card" onclick="openFeature('intensive-listening')">
+                <div class="feature-icon">
+                    <i class="fas fa-headphones"></i>
+                </div>
+                <h3>Intensive Listening</h3>
+                <p>2-hour focused sessions to train your ear for pronunciation and grammar patterns.</p>
+            </div>
+
+            <div class="feature-card" onclick="openFeature('idioms')">
+                <div class="feature-icon">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <h3>Idioms & Slang</h3>
+                <p>Master common idioms natives use daily. Speak naturally and understand conversations.</p>
+            </div>
+
+            <div class="feature-card" onclick="openFeature('vocabulary')">
+                <div class="feature-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h3>Vocabulary Builder</h3>
+                <p>Learn phrases, not just words. Build lasting vocabulary with spaced repetition.</p>
+            </div>
+
+            <div class="feature-card" onclick="openFeature('accent')">
+                <div class="feature-icon">
+                    <i class="fas fa-microphone"></i>
+                </div>
+                <h3>Accent Reduction</h3>
+                <p>Record your voice and compare with native speakers. Reduce your native accent.</p>
+            </div>
+
+            <div class="feature-card" onclick="openFeature('grammar')">
+                <div class="feature-icon">
+                    <i class="fas fa-pen"></i>
+                </div>
+                <h3>Grammar</h3>
+                <p>Learn grammar naturally through listening, not memorizing rules.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 21-Day Challenge Section -->
+    <section class="challenge-section" id="21days">
+        <div class="challenge-container">
+            <h2><i class="fas fa-fire"></i> 21-Day Fast Track</h2>
+            <p>Become fluent in just 21 days with this intensive program</p>
+            
+            <div class="schedule-card">
+                <h3>Daily Schedule (4 Hours)</h3>
+                <div class="schedule-item">
+                    <i class="fas fa-headphones"></i>
+                    <div>
+                        <span class="time">2 Hours</span>
+                        <p>Intensive Listening - Focus on pronunciation & vocabulary</p>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <i class="fas fa-volume-up"></i>
+                    <div>
+                        <span class="time">2 Hours</span>
+                        <p>Shadowing - Repeat with speaker until memorized</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin: 1.5rem 0 1rem;">Requirements:</h3>
+            <div class="requirements-grid">
+                <div class="requirement-item">
+                    <i class="fas fa-tv"></i>
+                    <p>Understand 75% of English content</p>
+                </div>
+                <div class="requirement-item">
+                    <i class="fas fa-language"></i>
+                    <p>Avoid native language for 21 days</p>
+                </div>
+                <div class="requirement-item">
+                    <i class="fas fa-brain"></i>
+                    <p>Think only in English</p>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" style="margin-top: 1.5rem; max-width: 250px;" onclick="start21DayChallenge()">
+                <i class="fas fa-rocket"></i> Start Challenge
+            </button>
+        </div>
+    </section>
+
+    <!-- Progress Tracker -->
+    <section class="progress-section" id="progress">
+        <div class="section-title">
+            <h2>Your Progress</h2>
+            <p>Track your journey to fluency</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="daysCompleted">0</div>
+                <div class="stat-label">Days Done</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="hoursPracticed">0</div>
+                <div class="stat-label">Hours</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="idiomsLearned">0</div>
+                <div class="stat-label">Idioms</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="wordsLearned">0</div>
+                <div class="stat-label">Words</div>
+            </div>
+        </div>
+
+        <div class="streak-card">
+            <div class="streak-icon">
+                <i class="fas fa-fire"></i>
+            </div>
+            <div class="streak-content">
+                <h3>Current Streak</h3>
+                <div class="streak-value" id="currentStreak">0 days</div>
+                <p>Practice daily to maintain your streak!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODALS -->
+
+    <!-- Shadowing Modal -->
+    <div class="modal" id="shadowing-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('shadowing-modal')">&times;</button>
+            <h2><i class="fas fa-volume-up"></i> Shadowing Practice</h2>
+            <p style="margin: 0.5rem 0 1rem; color: #64748b; font-size: 0.9rem;">Listen and repeat simultaneously</p>
+            
+            <div class="shadowing-player">
+                <p style="margin-bottom: 1rem; line-height: 1.6;">"Hello, my name is John and I'm delighted to meet you today. How are you doing?"</p>
+                
+                <div class="audio-controls">
+                    <button class="control-btn" onclick="playAudio()"><i class="fas fa-play"></i></button>
+                    <button class="control-btn" onclick="pauseAudio()"><i class="fas fa-pause"></i></button>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="audioProgress"></div>
+                    </div>
+                </div>
+
+                <div style="font-size: 0.85rem; margin-top: 1rem; opacity: 0.9;">
+                    <p><strong>1.</strong> Listen completely first</p>
+                    <p><strong>2.</strong> Play and repeat simultaneously</p>
+                    <p><strong>3.</strong> Practice until perfect</p>
+                </div>
+            </div>
+
+            <div class="recorder-container">
+                <h3>Record Your Voice</h3>
+                <p style="font-size: 0.85rem; color: #64748b;">Compare with native speaker</p>
+                <button class="record-btn" id="recordBtn" onclick="toggleRecording()">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <div class="recording-indicator" id="recordingIndicator">
+                    <i class="fas fa-circle"></i> Recording...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Idioms Modal -->
+    <div class="modal" id="idioms-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('idioms-modal')">&times;</button>
+            <h2><i class="fas fa-lightbulb"></i> Idioms Flashcards</h2>
+            <p style="margin: 0.5rem 0 1rem; color: #64748b; font-size: 0.9rem;">Tap card to flip</p>
+            
+            <div class="flashcard-container">
+                <div class="flashcard" id="idiomCard" onclick="flipCard()">
+                    <div class="flashcard-front">
+                        <h3 id="idiomFront">A blessing in disguise</h3>
+                        <p><i class="fas fa-sync"></i> Tap to flip</p>
+                    </div>
+                    <div class="flashcard-back">
+                        <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">Meaning:</h3>
+                        <p id="idiomBack" style="font-size: 0.95rem;">Something which seems bad at first, but turns out to be good</p>
+                        <p style="margin-top: 0.75rem; font-style: italic; font-size: 0.85rem;" id="idiomExample">Example: Losing that job was a blessing in disguise!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="idiom-nav">
+                <button class="btn btn-secondary btn-small" onclick="prevIdiom()">
+                    <i class="fas fa-arrow-left"></i> Prev
+                </button>
+                <button class="btn btn-primary btn-small" onclick="nextIdiom()">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <div class="checklist-container">
+                <h4>Idioms Checklist</h4>
+                <div id="idiomsChecklist">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Intensive Listening Modal -->
+    <div class="modal" id="intensive-listening-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('intensive-listening-modal')">&times;</button>
+            <h2><i class="fas fa-headphones"></i> Intensive Listening</h2>
+            
+            <div style="background: #f0fdf4; padding: 1rem; border-radius: 12px; margin: 1rem 0;">
+                <p style="font-size: 0.9rem;"><strong>Method:</strong> Choose 10-20 min audio. Listen on repeat for 2 hours focusing on pronunciation, grammar, and vocabulary.</p>
+            </div>
+
+            <div class="timer-display" id="listeningTimer">02:00:00</div>
+            
+            <div class="timer-controls">
+                <button class="btn btn-primary btn-small" onclick="startListeningTimer()">
+                    <i class="fas fa-play"></i> Start
+                </button>
+                <button class="btn btn-secondary btn-small" onclick="pauseListeningTimer()">
+                    <i class="fas fa-pause"></i> Pause
+                </button>
+                <button class="btn btn-secondary btn-small" onclick="resetListeningTimer()">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+            </div>
+
+            <div style="margin-top: 1.5rem;">
+                <h4 style="margin-bottom: 0.75rem;">Recommended:</h4>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
+                    <div style="background: #f1f5f9; padding: 0.75rem; border-radius: 10px; text-align: center; font-size: 0.85rem;">
+                        <i class="fas fa-podcast" style="color: var(--primary);"></i> TED Talks
+                    </div>
+                    <div style="background: #f1f5f9; padding: 0.75rem; border-radius: 10px; text-align: center; font-size: 0.85rem;">
+                        <i class="fas fa-video" style="color: var(--primary);"></i> YouTube
+                    </div>
+                    <div style="background: #f1f5f9; padding: 0.75rem; border-radius: 10px; text-align: center; font-size: 0.85rem;">
+                        <i class="fas fa-film" style="color: var(--primary);"></i> Movies
+                    </div>
+                    <div style="background: #f1f5f9; padding: 0.75rem; border-radius: 10px; text-align: center; font-size: 0.85rem;">
+                        <i class="fas fa-music" style="color: var(--primary);"></i> Podcasts
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vocabulary Modal -->
+    <div class="modal" id="vocabulary-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('vocabulary-modal')">&times;</button>
+            <h2><i class="fas fa-book"></i> Vocabulary</h2>
+            
+            <div class="daily-word-card">
+                <h4>Word of the Day</h4>
+                <div class="word" id="dailyWord">Serendipity</div>
+                <div class="meaning" id="wordMeaning">The occurrence of events by chance in a happy way</div>
+                <div class="example" id="wordExample">"Finding this app was pure serendipity."</div>
+            </div>
+
+            <h3 style="margin: 1rem 0 0.5rem;">My Word Journal</h3>
+            
+            <div class="word-input-row">
+                <input type="text" id="newWord" placeholder="New word...">
+                <input type="text" id="newWordMeaning" placeholder="Meaning...">
+            </div>
+            <button class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;" onclick="addWord()">
+                <i class="fas fa-plus"></i> Add Word
+            </button>
+
+            <div class="word-list" id="wordList">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Accent Modal -->
+    <div class="modal" id="accent-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('accent-modal')">&times;</button>
+            <h2><i class="fas fa-microphone"></i> Accent Reduction</h2>
+            
+            <div style="background: #fef3c7; padding: 1rem; border-radius: 12px; margin: 1rem 0;">
+                <p style="font-size: 0.9rem;"><strong>Tips:</strong> Use shadowing daily. Record yourself. Be mindful of sounds that don't exist in your native language.</p>
+            </div>
+
+            <div class="recorder-container">
+                <p style="margin-bottom: 0.5rem;">Read: <strong>"The quick brown fox jumps over the lazy dog."</strong></p>
+                <button class="record-btn" id="accentRecordBtn" onclick="toggleAccentRecording()">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <p style="font-size: 0.85rem; color: #64748b;">Record and compare</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grammar Modal -->
+    <div class="modal" id="grammar-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('grammar-modal')">&times;</button>
+            <h2><i class="fas fa-pen"></i> Grammar</h2>
+            
+            <div style="background: #fef3c7; border-left: 3px solid var(--secondary); padding: 1rem; margin: 1rem 0;">
+                <p style="font-size: 0.9rem;">Learn grammar through listening, not memorizing rules. Focus on tenses!</p>
+            </div>
+
+            <h3 style="margin-bottom: 0.75rem;">Key Tenses:</h3>
+            <div style="display: grid; gap: 0.5rem;">
+                <div style="background: #f1f5f9; padding: 0.75rem; border-radius: 10px; font-size: 0.9rem;">
+                    <strong>Past:</strong> "I <u>went</u> to the store" (already happened)
+                </div>
+                <div style="background: #f1f5f9; padding: 0.75rem; border-radius: 10px; font-size: 0.9rem;">
+                    <strong>Future:</strong> "I <u>will go</u> to the store" (going to happen)
+                </div>
+            </div>
+
+            <h3 style="margin: 1rem 0 0.5rem;">Common Mistakes:</h3>
+            <div style="background: #fee2e2; padding: 1rem; border-radius: 12px;">
+                <p style="font-size: 0.9rem; margin-bottom: 0.5rem;"><span style="color: var(--danger);">❌</span> "you're hair"</p>
+                <p style="font-size: 0.9rem;"><span style="color: var(--success);">✓</span> "your hair"</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== DATA ====================
+        const idioms = [
+            { phrase: "A blessing in disguise", meaning: "Something bad that turns out to be good", example: "Losing that job was a blessing in disguise!" },
+            { phrase: "Better late than never", meaning: "Better to arrive late than never", example: "I finished the project - better late than never!" },
+            { phrase: "Bite the bullet", meaning: "Do something you don't want to do", example: "I have to bite the bullet and tell him." },
+            { phrase: "Break a leg", meaning: "Good luck", example: "Break a leg at your performance!" },
+            { phrase: "Cut me some slack", meaning: "Don't be so hard on me", example: "Cut me some slack, it's my first day!" },
+            { phrase: "Hit the sack", meaning: "Go to bed", example: "I'm tired, I'm going to hit the sack." },
+            { phrase: "Once in a blue moon", meaning: "Rarely happens", example: "I only see him once in a blue moon." },
+            { phrase: "The ball is in your court", meaning: "It's your decision", example: "The ball is in your court now." }
+        ];
+
+        const dailyWords = [
+            { word: "Serendipity", meaning: "Events by chance in a happy way", example: "Finding this was pure serendipity." },
+            { word: "Resilient", meaning: "Recover quickly from difficulties", example: "She's a resilient person." },
+            { word: "Eloquent", meaning: "Fluent in speaking", example: "He gave an eloquent speech." },
+            { word: "Ephemeral", meaning: "Lasting a short time", example: "Trends are ephemeral." }
+        ];
+
+        // ==================== STATE ====================
+        let currentIdiomIndex = 0;
+        let vocabulary = JSON.parse(localStorage.getItem('fluent_vocab')) || [];
+        let progress = JSON.parse(localStorage.getItem('fluent_progress')) || {
+            daysCompleted: 0,
+            hoursPracticed: 0,
+            idiomsLearned: [],
+            wordsLearned: 0,
+            currentStreak: 0,
+            lastPracticeDate: null
+        };
+        let isRecording = false;
+        let audioInterval = null;
+        let listeningTimerInterval = null;
+        let listeningSeconds = 7200;
+
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            registerServiceWorker();
+            updateProgressDisplay();
+            populateIdiomsChecklist();
+            renderWordList();
+            updateDailyWord();
+            checkStreak();
+            setupInstallPrompt();
+        });
+
+        // ==================== SERVICE WORKER ====================
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then((registration) => {
+                        console.log('SW registered:', registration);
+                    })
+                    .catch((error) => {
+                        console.log('SW registration failed:', error);
+                    });
+            }
+        }
+
+        // ==================== INSTALL PROMPT ====================
+        let deferredPrompt;
+
+        function setupInstallPrompt() {
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                showInstallBanner();
+            });
+
+            document.getElementById('installBtn').addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        showToast('App installed successfully!');
+                    }
+                    deferredPrompt = null;
+                    hideInstallBanner();
+                }
+            });
+        }
+
+        function showInstallBanner() {
+            if (!window.matchMedia('(display-mode: standalone)').matches) {
+                document.getElementById('installBanner').classList.add('show');
+            }
+        }
+
+        function hideInstallBanner() {
+            document.getElementById('installBanner').classList.remove('show');
+        }
+
+        function dismissInstall() {
+            hideInstallBanner();
+            localStorage.setItem('install_dismissed', Date.now().toString());
+        }
+
+        // ==================== TOAST ====================
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ==================== NAVIGATION ====================
+        function setActiveNav(element) {
+            document.querySelectorAll('.mobile-nav-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        // ==================== MODALS ====================
+        function openFeature(feature) {
+            const modal = document.getElementById(`${feature}-modal`);
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close on outside click
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // ==================== IDIOMS ====================
+        function flipCard() {
+            document.getElementById('idiomCard').classList.toggle('flipped');
+        }
+
+        function nextIdiom() {
+            document.getElementById('idiomCard').classList.remove('flipped');
+            setTimeout(() => {
+                currentIdiomIndex = (currentIdiomIndex + 1) % idioms.length;
+                updateIdiomCard();
+            }, 300);
+        }
+
+        function prevIdiom() {
+            document.getElementById('idiomCard').classList.remove('flipped');
+            setTimeout(() => {
+                currentIdiomIndex = (currentIdiomIndex - 1 + idioms.length) % idioms.length;
+                updateIdiomCard();
+            }, 300);
+        }
+
+        function updateIdiomCard() {
+            const idiom = idioms[currentIdiomIndex];
+            document.getElementById('idiomFront').textContent = idiom.phrase;
+            document.getElementById('idiomBack').textContent = idiom.meaning;
+            document.getElementById('idiomExample').textContent = `Example: ${idiom.example}`;
+        }
+
+        function populateIdiomsChecklist() {
+            const container = document.getElementById('idiomsChecklist');
+            container.innerHTML = idioms.map((idiom, index) => `
+                <label class="checklist-item">
+                    <input type="checkbox" ${progress.idiomsLearned.includes(index) ? 'checked' : ''} 
+                           onchange="toggleIdiom(${index})">
+                    <span>${idiom.phrase}</span>
+                </label>
+            `).join('');
+        }
+
+        function toggleIdiom(index) {
+            const idx = progress.idiomsLearned.indexOf(index);
+            if (idx > -1) {
+                progress.idiomsLearned.splice(idx, 1);
+            } else {
+                progress.idiomsLearned.push(index);
+            }
+            saveProgress();
+            updateProgressDisplay();
+            showToast('Progress saved!');
+        }
+
+        // ==================== VOCABULARY ====================
+        function updateDailyWord() {
+            const dayIndex = new Date().getDate() % dailyWords.length;
+            const word = dailyWords[dayIndex];
+            document.getElementById('dailyWord').textContent = word.word;
+            document.getElementById('wordMeaning').textContent = word.meaning;
+            document.getElementById('wordExample').textContent = `"${word.example}"`;
+        }
+
+        function addWord() {
+            const word = document.getElementById('newWord').value.trim();
+            const meaning = document.getElementById('newWordMeaning').value.trim();
+            
+            if (word && meaning) {
+                vocabulary.push({
+                    word,
+                    meaning,
+                    date: new Date().toLocaleDateString()
+                });
+                localStorage.setItem('fluent_vocab', JSON.stringify(vocabulary));
+                
+                document.getElementById('newWord').value = '';
+                document.getElementById('newWordMeaning').value = '';
+                
+                renderWordList();
+                progress.wordsLearned = vocabulary.length;
+                saveProgress();
+                updateProgressDisplay();
+                showToast('Word added!');
+            }
+        }
+
+        function renderWordList() {
+            const list = document.getElementById('wordList');
+            list.innerHTML = vocabulary.slice().reverse().map((item, index) => `
+                <div class="word-item">
+                    <div class="word-text">
+                        <strong>${item.word}</strong>
+                        <span>${item.meaning}</span>
+                    </div>
+                    <button onclick="deleteWord(${vocabulary.length - 1 - index})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `).join('') || '<p style="color: #64748b; text-align: center; padding: 1rem;">No words added yet</p>';
+        }
+
+        function deleteWord(index) {
+            vocabulary.splice(index, 1);
+            localStorage.setItem('fluent_vocab', JSON.stringify(vocabulary));
+            renderWordList();
+            progress.wordsLearned = vocabulary.length;
+            saveProgress();
+            updateProgressDisplay();
+        }
+
+        // ==================== AUDIO ====================
+        function playAudio() {
+            if (audioInterval) return;
+            let progress = 0;
+            audioInterval = setInterval(() => {
+                progress += 2;
+                document.getElementById('audioProgress').style.width = progress + '%';
+                if (progress >= 100) {
+                    clearInterval(audioInterval);
+                    audioInterval = null;
+                }
+            }, 100);
+        }
+
+        function pauseAudio() {
+            clearInterval(audioInterval);
+            audioInterval = null;
+        }
+
+        // ==================== RECORDING ====================
+        function toggleRecording() {
+            isRecording = !isRecording;
+            const btn = document.getElementById('recordBtn');
+            const indicator = document.getElementById('recordingIndicator');
+            
+            if (isRecording) {
+                btn.classList.add('recording');
+                indicator.classList.add('active');
+                
+                if ('vibrate' in navigator) navigator.vibrate(200);
+            } else {
+                btn.classList.remove('recording');
+                indicator.classList.remove('active');
+                showToast('Recording saved!');
+            }
+        }
+
+        function toggleAccentRecording() {
+            const btn = document.getElementById('accentRecordBtn');
+            btn.classList.toggle('recording');
+            
+            if (btn.classList.contains('recording')) {
+                if ('vibrate' in navigator) navigator.vibrate(200);
+                setTimeout(() => {
+                    btn.classList.remove('recording');
+                    showToast('Recording complete!');
+                }, 5000);
+            }
+        }
+
+        // ==================== TIMER ====================
+        function startListeningTimer() {
+            if (listeningTimerInterval) return;
+            
+            listeningTimerInterval = setInterval(() => {
+                listeningSeconds--;
+                updateTimerDisplay();
+                
+                if (listeningSeconds <= 0) {
+                    clearInterval(listeningTimerInterval);
+                    listeningTimerInterval = null;
+                    showToast('Session complete! Great job!');
+                    progress.hoursPracticed += 2;
+                    saveProgress();
+                    updateProgressDisplay();
+                    if ('vibrate' in navigator) navigator.vibrate([200, 100, 200]);
+                }
+            }, 1000);
+        }
+
+        function pauseListeningTimer() {
+            clearInterval(listeningTimerInterval);
+            listeningTimerInterval = null;
+        }
+
+        function resetListeningTimer() {
+            clearInterval(listeningTimerInterval);
+            listeningTimerInterval = null;
+            listeningSeconds = 7200;
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const hours = Math.floor(listeningSeconds / 3600);
+            const minutes = Math.floor((listeningSeconds % 3600) / 60);
+            const seconds = listeningSeconds % 60;
+            document.getElementById('listeningTimer').textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // ==================== PROGRESS ====================
+        function saveProgress() {
+            localStorage.setItem('fluent_progress', JSON.stringify(progress));
+        }
+
+        function updateProgressDisplay() {
+            document.getElementById('daysCompleted').textContent = progress.daysCompleted;
+            document.getElementById('hoursPracticed').textContent = progress.hoursPracticed;
+            document.getElementById('idiomsLearned').textContent = progress.idiomsLearned.length;
+            document.getElementById('wordsLearned').textContent = progress.wordsLearned;
+            document.getElementById('currentStreak').textContent = progress.currentStreak + ' days';
+        }
+
+        function checkStreak() {
+            const today = new Date().toDateString();
+            if (progress.lastPracticeDate && progress.lastPracticeDate !== today) {
+                const lastDate = new Date(progress.lastPracticeDate);
+                const diffDays = Math.floor((new Date() - lastDate) / (1000 * 60 * 60 * 24));
+                if (diffDays > 1) {
+                    progress.currentStreak = 0;
+                    saveProgress();
+                    updateProgressDisplay();
+                }
+            }
+        }
+
+        function start21DayChallenge() {
+            const today = new Date().toDateString();
+            
+            if (progress.lastPracticeDate !== today) {
+                progress.daysCompleted = Math.min(progress.daysCompleted + 1, 21);
+                progress.currentStreak++;
+                progress.lastPracticeDate = today;
+                saveProgress();
+                updateProgressDisplay();
+                
+                if ('vibrate' in navigator) navigator.vibrate([100, 50, 100]);
+            }
+            
+            showToast('Challenge started! Good luck!');
+            openFeature('intensive-listening');
+        }
+
+        // ==================== SWIPE GESTURES ====================
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                const flashcard = document.getElementById('idiomCard');
+                if (flashcard && flashcard.closest('.modal.active')) {
+                    if (diff > 0) {
+                        nextIdiom();
+                    } else {
+                        prevIdiom();
+                    }
+                }
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+</body>
+</html>
