@@ -8,11 +8,14 @@ A complete **Progressive Web App (PWA)** that works like a native Android app!
 
 ```
 fluent_english_app/
-├── index.html              # Main app (65KB - complete application)
-├── manifest.json           # PWA configuration
-├── service-worker.js       # Offline support
-├── generate_icons.py       # Icon generator
-├── icons/                  # 8 icon sizes (72px to 512px)
+├── index.html                   # Main PWA app (complete application)
+├── manifest.json                # PWA configuration
+├── service-worker.js            # Offline support
+├── generate_icons.py            # Icon generator
+├── past-events-tracker.html     # Phoenix Medical Past Events Tracker (web app)
+├── past_events_tracker.py.py    # Python script — searches & exports past medical events
+│                                #   (double .py.py extension is the original uploaded filename)
+├── icons/                       # 8 icon sizes (72px to 512px)
 │   ├── icon-72x72.png
 │   ├── icon-96x96.png
 │   ├── icon-128x128.png
@@ -21,8 +24,8 @@ fluent_english_app/
 │   ├── icon-192x192.png
 │   ├── icon-384x384.png
 │   └── icon-512x512.png
-├── README.md               # Full documentation
-└── QUICK_START.md         # This file
+├── README.md                    # Full documentation
+└── QUICK_START.md               # This file
 ```
 
 ## How to Install on Your Android Phone
