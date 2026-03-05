@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0ea5e9">
+    <meta name="description" content="Phoenix Medical — Past Events Tracker. Find all completed medical events with reviews and outcomes (March 2025 - March 2026).">
+    <title>Phoenix Medical — Past Events Tracker</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --primary-dark: #0284c7;
+            --secondary: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --light: #f0f9ff;
+            --gradient: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Header ── */
+        .header {
+            background: var(--gradient);
+            padding: 1.5rem 1rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 1.35rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.85);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+        }
+
+        /* ── Controls ── */
+        .controls {
+            max-width: 1200px;
+            margin: 1.25rem auto 0;
+            padding: 0 1rem 1.25rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 0.85rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.65rem 1rem 0.65rem 2.5rem;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            background: white;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+        }
+
+        .filter-select {
+            padding: 0.65rem 1rem;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            background: white;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .filter-select:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-export {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 0.65rem 1.25rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-export:hover { background: #059669; }
+
+        /* ── Stats Bar ── */
+        .stats-bar {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .stat-chip {
+            background: white;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 0.4rem 1rem;
+            font-size: 0.82rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .stat-chip .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* ── Events Grid ── */
+        .events-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem 5rem;
+        }
+
+        .result-count {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 1rem;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.25rem;
+        }
+
+        /* ── Event Card ── */
+        .event-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid #f1f5f9;
+        }
+
+        .event-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            padding: 1rem 1.1rem 0.75rem;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .card-header h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            line-height: 1.4;
+            flex: 1;
+        }
+
+        .category-badge {
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.25rem 0.65rem;
+            border-radius: 20px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .cat-neonatology   { background: #dbeafe; color: #1d4ed8; }
+        .cat-maternal      { background: #fce7f3; color: #be185d; }
+        .cat-paediatrics   { background: #d1fae5; color: #065f46; }
+        .cat-perinatology  { background: #ede9fe; color: #6d28d9; }
+        .cat-tradeshow     { background: #fef3c7; color: #92400e; }
+        .cat-medical       { background: #f1f5f9; color: #475569; }
+
+        .card-body {
+            padding: 0.85rem 1.1rem;
+        }
+
+        .card-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .card-row i {
+            color: var(--primary);
+            width: 16px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .card-row span {
+            color: #475569;
+            line-height: 1.4;
+        }
+
+        .card-row strong {
+            color: var(--dark);
+        }
+
+        .description-text {
+            font-size: 0.82rem;
+            color: #64748b;
+            line-height: 1.5;
+            margin: 0.5rem 0;
+        }
+
+        .review-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+        }
+
+        .review-excellent  { background: #d1fae5; color: #065f46; }
+        .review-very-good  { background: #dbeafe; color: #1d4ed8; }
+        .review-good       { background: #fef3c7; color: #92400e; }
+        .review-completed  { background: #ede9fe; color: #6d28d9; }
+        .review-pending    { background: #f1f5f9; color: #475569; }
+
+        .card-footer {
+            padding: 0.65rem 1.1rem;
+            border-top: 1px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .source-badge {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .btn-link {
+            font-size: 0.78rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .btn-link:hover { text-decoration: underline; }
+
+        /* ── Empty State ── */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 1rem;
+            color: #94a3b8;
+        }
+
+        .empty-state i { font-size: 3rem; margin-bottom: 1rem; }
+        .empty-state h3 { font-size: 1.1rem; margin-bottom: 0.5rem; color: #64748b; }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--dark);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            z-index: 9999;
+            transition: transform 0.3s ease;
+            pointer-events: none;
+        }
+
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        /* ── Query Section ── */
+        .queries-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem 2rem;
+        }
+
+        .queries-toggle {
+            background: white;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 0.85rem 1.1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--dark);
+            width: 100%;
+            transition: border-color 0.2s;
+        }
+
+        .queries-toggle:hover { border-color: var(--primary); }
+
+        .queries-content {
+            display: none;
+            background: white;
+            border: 1.5px solid #e2e8f0;
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            padding: 1rem 1.1rem;
+        }
+
+        .queries-content.open { display: block; }
+
+        .query-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .query-tag {
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 0.78rem;
+            padding: 0.25rem 0.65rem;
+            border-radius: 12px;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 640px) {
+            .header h1 { font-size: 1.15rem; }
+            .events-grid { grid-template-columns: 1fr; }
+            .controls { padding-bottom: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-inner">
+            <h1><i class="fas fa-calendar-check"></i> Phoenix Medical — Past Events Tracker</h1>
+            <p>Completed medical events &amp; conferences &bull; March 2025 – March 2026</p>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search events, locations, highlights…" oninput="renderEvents()">
+        </div>
+        <select class="filter-select" id="categoryFilter" onchange="renderEvents()">
+            <option value="">All Categories</option>
+            <option value="Neonatology">👶 Neonatology</option>
+            <option value="Maternal">🤰 Maternal / OB-GYN</option>
+            <option value="Paediatrics">🧒 Paediatrics</option>
+            <option value="Perinatology">🔬 Perinatology</option>
+            <option value="Medical Tradeshow">🏢 Tradeshows</option>
+            <option value="Medical">🏥 Medical / Healthcare</option>
+        </select>
+        <select class="filter-select" id="reviewFilter" onchange="renderEvents()">
+            <option value="">All Reviews</option>
+            <option value="Excellent">⭐ Excellent</option>
+            <option value="Very Good">✅ Very Good</option>
+            <option value="Good">👍 Good</option>
+            <option value="Completed">🎯 Completed</option>
+        </select>
+        <button class="btn-export" onclick="exportCSV()">
+            <i class="fas fa-download"></i> Export CSV
+        </button>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar" id="statsBar"></div>
+
+    <!-- Events -->
+    <div class="events-container">
+        <div class="result-count" id="resultCount"></div>
+        <div class="events-grid" id="eventsGrid"></div>
+    </div>
+
+    <!-- Search Queries Reference -->
+    <div class="queries-section">
+        <button class="queries-toggle" onclick="toggleQueries()">
+            <span><i class="fas fa-search" style="margin-right:0.5rem;color:var(--primary)"></i>Search Queries Used for Web Lookup</span>
+            <i class="fas fa-chevron-down" id="queriesChevron"></i>
+        </button>
+        <div class="queries-content" id="queriesContent">
+            <p style="font-size:0.85rem;color:#64748b;margin-bottom:0.75rem;">These queries are used to search for additional past events online (via DuckDuckGo in the Python backend).</p>
+            <div class="query-tags" id="queryTagsContainer"></div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ================================================================
+        // DATA — mirrored from past_events_tracker.py
+        // ================================================================
+
+        const KNOWN_EVENTS = [
+            {
+                date: "Jan 8–12, 2025",
+                sortDate: "2025-01-08",
+                name: "AICOG 2025 — 67th FOGSI Annual Congress",
+                location: "Mumbai — Jio World Convention Centre",
+                category: "Maternal/OB-GYN",
+                organizer: "FOGSI (MOGS)",
+                attendance: "10,000+",
+                review: "Excellent — Major Success",
+                highlights: "1000+ faculty speakers, 10 academic halls, 5-day mega event, pharmaceutical & equipment exhibition with leading brands",
+                url: "https://aicogmumbai2025.com",
+                source: "Verified Event",
+            },
+            {
+                date: "Jan 19, 2025",
+                sortDate: "2025-01-19",
+                name: "FOGSI ICOG PG Clinic",
+                location: "Online / Bangalore",
+                category: "Maternal/Medical Education",
+                organizer: "FOGSI",
+                attendance: "500+",
+                review: "Good — Educational",
+                highlights: "Senior consultants from Manipal Hospital, focus on postgraduate medical training, expert panel discussions",
+                url: "https://www.fogsi.org",
+                source: "Verified Event",
+            },
+            {
+                date: "Feb 23, 2025",
+                sortDate: "2025-02-23",
+                name: "Neo-Pedicon 2025",
+                location: "Kolkata — Taj City Centre Newtown",
+                category: "Neonatology/Paediatrics",
+                organizer: "Neotia Bhagirathi Hospital",
+                attendance: "300+",
+                review: "Very Good",
+                highlights: "Regional neonatal and paediatric academic sessions, strategized program with leading experts",
+                url: "https://neotiahospital.com/neo-pedicon-2025",
+                source: "Verified Event",
+            },
+            {
+                date: "Aug 4–5, 2025",
+                sortDate: "2025-08-04",
+                name: "6th World Congress on Pediatrics & Neonatology",
+                location: "International (India participation)",
+                category: "Neonatology/Paediatrics",
+                organizer: "Inovine Meetings LLC",
+                attendance: "1,500+",
+                review: "Successful — International",
+                highlights: "Global pediatric and neonatal experts, research presentations, international networking, latest clinical advances",
+                url: "https://www.pediatrics-conferences.com",
+                source: "Verified Event",
+            },
+            {
+                date: "Aug 29–30, 2025",
+                sortDate: "2025-08-29",
+                name: "Perinatology Conference & Workshop 2025",
+                location: "Bangalore — Vydehi Advanced Simulation Academy",
+                category: "Perinatology/Neonatology",
+                organizer: "NeoGurukul + VASA",
+                attendance: "200+",
+                review: "Excellent — Hands-on Training",
+                highlights: "Theme: From Womb to World. Fetal monitoring, high-risk pregnancies, neonatal resuscitation, simulation-based training",
+                url: "https://vasa.ac.in/news/perinatology-workshop-conference-2025/",
+                source: "Verified Event",
+            },
+            {
+                date: "Dec 11–14, 2025",
+                sortDate: "2025-12-11",
+                name: "NEOCON 2025 — NNF Annual Conference",
+                location: "Visakhapatnam, Andhra Pradesh",
+                category: "Neonatology",
+                organizer: "National Neonatology Forum",
+                attendance: "3,000+",
+                review: "Completed — Highly Successful",
+                highlights: "Theme: Neonatal Care — Evidence to Excellence. India's largest neonatology gathering, comprehensive academic program, 3000+ NICU specialists",
+                url: "https://neocon2025vizag.com",
+                source: "Verified Event",
+            },
+        ];
+
+        const SEARCH_QUERIES = [
+            "neonatology conference India 2025 review",
+            "neonatology conference India 2025 highlights",
+            "paediatrics conference India 2025 review",
+            "paediatrics conference India 2025 report",
+            "maternal care conference India 2025 review",
+            "FOGSI conference India 2025 review",
+            "obstetrics conference India 2025 report",
+            "NEOCON 2025 Vizag review report",
+            "NEOCON 2025 Visakhapatnam highlights",
+            "IAP NEOCON 2025 review outcome",
+            "AICOG 2025 Mumbai review",
+            "AICOG 2025 FOGSI review report",
+            "FOGSI 2025 annual conference review",
+            "PEDICON 2025 India review",
+            "IAP conference 2025 India review",
+            "NNF conference 2025 India report",
+            "medical conferences India March 2025 review",
+            "medical conferences India June 2025 review",
+            "medical conferences India September 2025 review",
+            "medical conferences India December 2025 review",
+            "medical conferences India January 2026 review",
+            "Medical Fair India 2025 review",
+            "healthcare expo India 2025 review",
+            "neonatology conference South India 2025",
+            "paediatrics conference Mumbai 2025 review",
+            "perinatology conference India 2025",
+            "fetal medicine conference India 2025",
+            "NICU conference India 2025",
+            "maternal health summit India 2025",
+            "medical event highlights India 2025",
+        ];
+
+        // ================================================================
+        // HELPERS
+        // ================================================================
+
+        function getCategoryClass(category) {
+            const c = category.toLowerCase();
+            if (c.includes("neonat")) return "cat-neonatology";
+            if (c.includes("maternal") || c.includes("ob-gyn") || c.includes("obstet") || c.includes("fogsi")) return "cat-maternal";
+            if (c.includes("paediat") || c.includes("pediatr")) return "cat-paediatrics";
+            if (c.includes("perinat") || c.includes("fetal")) return "cat-perinatology";
+            if (c.includes("tradeshow") || c.includes("expo") || c.includes("fair")) return "cat-tradeshow";
+            return "cat-medical";
+        }
+
+        function getCategoryEmoji(category) {
+            const c = category.toLowerCase();
+            if (c.includes("neonat")) return "👶";
+            if (c.includes("maternal") || c.includes("ob-gyn") || c.includes("obstet") || c.includes("fogsi")) return "🤰";
+            if (c.includes("paediat") || c.includes("pediatr")) return "🧒";
+            if (c.includes("perinat") || c.includes("fetal")) return "🔬";
+            if (c.includes("tradeshow") || c.includes("expo") || c.includes("fair")) return "🏢";
+            return "🏥";
+        }
+
+        function getReviewClass(review) {
+            const r = review.toLowerCase();
+            if (r.includes("excellent")) return "review-excellent";
+            if (r.includes("very good")) return "review-very-good";
+            if (r.includes("good") || r.includes("successful") || r.includes("international")) return "review-good";
+            if (r.includes("completed")) return "review-completed";
+            return "review-pending";
+        }
+
+        function matchesFilter(event, search, category, review) {
+            const searchLower = search.toLowerCase();
+            if (searchLower) {
+                const haystack = [event.name, event.location, event.highlights, event.organizer, event.category]
+                    .join(" ").toLowerCase();
+                if (!haystack.includes(searchLower)) return false;
+            }
+            if (category) {
+                if (!event.category.toLowerCase().includes(category.toLowerCase())) return false;
+            }
+            if (review) {
+                if (!event.review.toLowerCase().includes(review.toLowerCase())) return false;
+            }
+            return true;
+        }
+
+        // ================================================================
+        // RENDER
+        // ================================================================
+
+        function renderEvents() {
+            const search   = document.getElementById("searchInput").value;
+            const category = document.getElementById("categoryFilter").value;
+            const review   = document.getElementById("reviewFilter").value;
+
+            const filtered = KNOWN_EVENTS.filter(e => matchesFilter(e, search, category, review));
+
+            // Sort by date descending (most recent first)
+            filtered.sort((a, b) => b.sortDate.localeCompare(a.sortDate));
+
+            const grid = document.getElementById("eventsGrid");
+            document.getElementById("resultCount").textContent =
+                `Showing ${filtered.length} of ${KNOWN_EVENTS.length} verified events`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column:1/-1">
+                        <i class="fas fa-calendar-times"></i>
+                        <h3>No events found</h3>
+                        <p>Try adjusting your search or filters.</p>
+                    </div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(event => `
+                <div class="event-card">
+                    <div class="card-header">
+                        <h3>${escapeHtml(event.name)}</h3>
+                        <span class="category-badge ${getCategoryClass(event.category)}">
+                            ${getCategoryEmoji(event.category)} ${escapeHtml(event.category)}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-row">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span><strong>${escapeHtml(event.date)}</strong></span>
+                        </div>
+                        <div class="card-row">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${escapeHtml(event.location)}</span>
+                        </div>
+                        <div class="card-row">
+                            <i class="fas fa-users"></i>
+                            <span><strong>${escapeHtml(event.attendance)}</strong> attendees &bull; Organizer: ${escapeHtml(event.organizer)}</span>
+                        </div>
+                        <p class="description-text">${escapeHtml(event.highlights)}</p>
+                        <span class="review-chip ${getReviewClass(event.review)}">
+                            <i class="fas fa-star"></i> ${escapeHtml(event.review)}
+                        </span>
+                    </div>
+                    <div class="card-footer">
+                        <span class="source-badge"><i class="fas fa-check-circle"></i> ${escapeHtml(event.source)}</span>
+                        ${event.url ? `<a class="btn-link" href="${escapeHtml(event.url)}" target="_blank" rel="noopener noreferrer">
+                            <i class="fas fa-external-link-alt"></i> Details
+                        </a>` : ""}
+                    </div>
+                </div>
+            `).join("");
+
+            renderStats(filtered);
+        }
+
+        function renderStats(filtered) {
+            const counts = {};
+            filtered.forEach(e => {
+                const cat = e.category.split("/")[0];
+                counts[cat] = (counts[cat] || 0) + 1;
+            });
+
+            const colors = {
+                "Neonatology": "#1d4ed8",
+                "Maternal": "#be185d",
+                "Paediatrics": "#065f46",
+                "Perinatology": "#6d28d9",
+                "Medical Tradeshow": "#92400e",
+                "Medical": "#475569",
+            };
+
+            const statsBar = document.getElementById("statsBar");
+            statsBar.innerHTML = [
+                `<div class="stat-chip"><span class="dot" style="background:var(--primary)"></span> <strong>${filtered.length}</strong> Events</div>`,
+                ...Object.entries(counts).map(([cat, count]) => {
+                    const color = Object.entries(colors).find(([k]) => cat.toLowerCase().includes(k.toLowerCase()))?.[1] || "#475569";
+                    return `<div class="stat-chip"><span class="dot" style="background:${color}"></span> ${getCategoryEmoji(cat)} ${cat}: <strong>${count}</strong></div>`;
+                })
+            ].join("");
+        }
+
+        // ================================================================
+        // EXPORT CSV
+        // ================================================================
+
+        function exportCSV() {
+            const search   = document.getElementById("searchInput").value;
+            const category = document.getElementById("categoryFilter").value;
+            const review   = document.getElementById("reviewFilter").value;
+
+            const filtered = KNOWN_EVENTS
+                .filter(e => matchesFilter(e, search, category, review))
+                .sort((a, b) => b.sortDate.localeCompare(a.sortDate));
+
+            const headers = ["Date", "Sort Date", "Event Name", "Location", "Category", "Organizer", "Attendance", "Review", "Key Highlights", "URL", "Source"];
+            const rows = filtered.map(e => [
+                e.date, e.sortDate, e.name, e.location, e.category,
+                e.organizer, e.attendance, e.review, e.highlights, e.url, e.source
+            ].map(v => `"${String(v).replace(/"/g, '""')}"`));
+
+            const csv = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            const url  = URL.createObjectURL(blob);
+            const a    = document.createElement("a");
+            const ts   = new Date().toISOString().slice(0,10);
+            a.href = url;
+            a.download = `PAST_Medical_Events_2025-26_${ts}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast("CSV exported successfully!");
+        }
+
+        // ================================================================
+        // QUERIES PANEL
+        // ================================================================
+
+        function toggleQueries() {
+            const content  = document.getElementById("queriesContent");
+            const chevron  = document.getElementById("queriesChevron");
+            const isOpen   = content.classList.contains("open");
+            content.classList.toggle("open", !isOpen);
+            chevron.style.transform = isOpen ? "" : "rotate(180deg)";
+
+            if (!isOpen && !document.getElementById("queryTagsContainer").children.length) {
+                document.getElementById("queryTagsContainer").innerHTML =
+                    SEARCH_QUERIES.map(q => `<span class="query-tag">${escapeHtml(q)}</span>`).join("");
+            }
+        }
+
+        // ================================================================
+        // TOAST
+        // ================================================================
+
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.textContent = message;
+            toast.classList.add("show");
+            setTimeout(() => toast.classList.remove("show"), 3000);
+        }
+
+        // ================================================================
+        // UTILS
+        // ================================================================
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // ================================================================
+        // INIT
+        // ================================================================
+
+        document.addEventListener("DOMContentLoaded", renderEvents);
+    </script>
+</body>
+</html>
