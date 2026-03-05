@@ -576,6 +576,105 @@
             color: #64748b;
         }
 
+        /* Past Sessions Report */
+        .sessions-container {
+            background: white;
+            border-radius: 16px;
+            margin-top: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .sessions-header {
+            padding: 1rem 1.5rem 0.75rem;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sessions-header h3 {
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sessions-list {
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .session-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.875rem 1.5rem;
+            border-bottom: 1px solid #f8fafc;
+            transition: background 0.2s;
+        }
+
+        .session-item:last-child {
+            border-bottom: none;
+        }
+
+        .session-item:hover {
+            background: #f8fafc;
+        }
+
+        .session-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .session-icon.challenge { background: #fef3c7; color: var(--secondary); }
+        .session-icon.listening { background: #e0e7ff; color: var(--primary); }
+        .session-icon.idiom     { background: #d1fae5; color: var(--success); }
+
+        .session-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .session-details .session-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .session-details .session-date {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 0.1rem;
+        }
+
+        .session-badge {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .session-badge.challenge { background: #fef3c7; color: #d97706; }
+        .session-badge.listening { background: #e0e7ff; color: var(--primary); }
+        .session-badge.idiom     { background: #d1fae5; color: #059669; }
+
+        .sessions-empty {
+            padding: 2rem;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
         /* Modal Styles */
         .modal {
             display: none;
@@ -1297,6 +1396,10 @@
                 <p>Practice daily to maintain your streak!</p>
             </div>
         </div>
+
+        <div class="sessions-container" id="sessionsContainer">
+            <!-- Populated by renderSessionsReport() -->
+        </div>
     </section>
 
     <!-- MODALS -->
@@ -1522,6 +1625,7 @@
         // ==================== STATE ====================
         let currentIdiomIndex = 0;
         let vocabulary = JSON.parse(localStorage.getItem('fluent_vocab')) || [];
+        let sessions = JSON.parse(localStorage.getItem('fluent_sessions')) || [];
         let progress = JSON.parse(localStorage.getItem('fluent_progress')) || {
             daysCompleted: 0,
             hoursPracticed: 0,
@@ -1544,6 +1648,7 @@
             updateDailyWord();
             checkStreak();
             setupInstallPrompt();
+            renderSessionsReport();
         });
 
         // ==================== SERVICE WORKER ====================
@@ -1808,6 +1913,7 @@
                     progress.hoursPracticed += 2;
                     saveProgress();
                     updateProgressDisplay();
+                    logEvent('listening', 'Listening', 'fa-headphones', 'Completed 2-hour Intensive Listening session');
                     if ('vibrate' in navigator) navigator.vibrate([200, 100, 200]);
                 }
             }, 1000);
@@ -1846,6 +1952,66 @@
             document.getElementById('currentStreak').textContent = progress.currentStreak + ' days';
         }
 
+        // ==================== SESSIONS REPORT ====================
+        function logEvent(type, label, icon, description) {
+            const entry = {
+                type,
+                label,
+                icon,
+                description,
+                date: new Date().toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })
+            };
+            sessions.unshift(entry);
+            if (sessions.length > 100) sessions.length = 100;
+            localStorage.setItem('fluent_sessions', JSON.stringify(sessions));
+            renderSessionsReport();
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function renderSessionsReport() {
+            const container = document.getElementById('sessionsContainer');
+            if (!container) return;
+
+            if (sessions.length === 0) {
+                container.innerHTML = `
+                    <div class="sessions-header">
+                        <h3><i class="fas fa-history"></i> Past Sessions</h3>
+                    </div>
+                    <div class="sessions-empty">
+                        <i class="fas fa-calendar-times" style="font-size:2rem;opacity:0.3;display:block;margin-bottom:0.5rem;"></i>
+                        No sessions recorded yet. Start your journey!
+                    </div>`;
+                return;
+            }
+
+            const items = sessions.map(s => `
+                <div class="session-item">
+                    <div class="session-icon ${escapeHtml(s.type)}">
+                        <i class="fas ${escapeHtml(s.icon)}"></i>
+                    </div>
+                    <div class="session-details">
+                        <div class="session-title">${escapeHtml(s.description)}</div>
+                        <div class="session-date">${escapeHtml(s.date)}</div>
+                    </div>
+                    <span class="session-badge ${escapeHtml(s.type)}">${escapeHtml(s.label)}</span>
+                </div>`).join('');
+
+            container.innerHTML = `
+                <div class="sessions-header">
+                    <h3><i class="fas fa-history"></i> Past Sessions</h3>
+                    <span style="font-size:0.8rem;color:#64748b;">${sessions.length} total</span>
+                </div>
+                <div class="sessions-list">${items}</div>`;
+        }
+
         function checkStreak() {
             const today = new Date().toDateString();
             if (progress.lastPracticeDate && progress.lastPracticeDate !== today) {
@@ -1868,6 +2034,7 @@
                 progress.lastPracticeDate = today;
                 saveProgress();
                 updateProgressDisplay();
+                logEvent('challenge', 'Challenge', 'fa-fire', `Started Day ${progress.daysCompleted} of 21-Day Challenge`);
                 
                 if ('vibrate' in navigator) navigator.vibrate([100, 50, 100]);
             }
